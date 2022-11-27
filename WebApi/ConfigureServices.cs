@@ -2,16 +2,15 @@
 using CleanArchitecture.Infrastructure.Persistence;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Services;
+using WebFramework.Filters;
 using NSwag;
 using NSwag.Generation.Processors.Security;
-using WebUI.Filters;
-using WebUI.Services;
-
-namespace WebUI;
+namespace WebApi;
 
 public static class ConfigureServices
 {
-    public static IServiceCollection AddWebUIServices(this IServiceCollection services)
+    public static IServiceCollection AddWebApiServices(this IServiceCollection services)
     {
         services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -23,7 +22,7 @@ public static class ConfigureServices
             .AddDbContextCheck<ApplicationDbContext>();
 
         services.AddControllersWithViews(options =>
-            options.Filters.Add<ApiExceptionFilterAttribute>())
+            options.Filters.Add<ApiResultFilterAttribute>())
                 .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
 
         services.AddRazorPages();

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using CleanArchitecture.Application.Common.Interfaces;
+using MediatR;
 
 namespace CleanArchitecture.Application.WeatherForecasts.Queries.GetWeatherForecasts;
 

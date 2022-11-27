@@ -1,18 +1,27 @@
+using CleanArchitecture.Application;
+using CleanArchitecture.Infrastructure;
 using CleanArchitecture.Infrastructure.Persistence;
+using Common;
+using WebFramework.Configuration;
+using WebUI;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var configuration = builder.Configuration;
+
 // Add services to the container.
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddWebUIServices();
+var _siteSetting = configuration.GetSection(nameof(SiteSettings)).Get<SiteSettings>();
+builder.Services.AddJwtAuthentication(_siteSetting.JwtSettings);
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
     app.UseMigrationsEndPoint();
 
     // Initialise and seed database
@@ -40,6 +49,7 @@ app.UseSwaggerUi3(settings =>
 });
 
 app.UseRouting();
+
 
 app.UseAuthentication();
 app.UseIdentityServer();
