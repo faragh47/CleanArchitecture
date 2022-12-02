@@ -1,6 +1,6 @@
 ﻿namespace CleanArchitecture.Domain.Common;
 
-public abstract class BaseAuditableEntity : BaseEntity
+public abstract class BaseAuditableEntity<Tkey> : BaseEntity<Tkey>
 {
     public DateTime Created { get; set; }
 

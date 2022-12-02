@@ -25,10 +25,10 @@ public class ApplicationDbContextInitialiser
     {
         try
         {
-            if (_context.Database.IsSqlServer())
-            {
-                await _context.Database.MigrateAsync();
-            }
+            //if (_context.Database.IsSqlServer())
+            //{
+              //  await _context.Database.MigrateAsync();
+            //}
         }
         catch (Exception ex)
         {

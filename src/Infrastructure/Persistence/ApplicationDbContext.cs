@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
+using System.Reflection.Emit;
 using CleanArchitecture.Application.Common.Interfaces;
+using CleanArchitecture.Domain.Common;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Infrastructure.Common.Extensions;
 using CleanArchitecture.Infrastructure.Identity;
@@ -16,6 +18,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 {
     private readonly IMediator _mediator;
     private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
+
 
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,
@@ -35,8 +38,10 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
         base.OnModelCreating(builder);
+        var entitiesAssembly = typeof(IEntity).Assembly;
+        builder.RegisterAllEntities<IEntity>(entitiesAssembly);
+        builder.RenameIdentityTableName();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -46,7 +51,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        await _mediator.DispatchDomainEvents(this);
+        await _mediator.DispatchDomainEvents<int>(this);
 
         return await base.SaveChangesAsync(cancellationToken);
     }

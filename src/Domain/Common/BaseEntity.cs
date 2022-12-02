@@ -2,10 +2,19 @@
 
 namespace CleanArchitecture.Domain.Common;
 
-public abstract class BaseEntity
-{
-    public int Id { get; set; }
 
+public interface IEntity
+{
+}
+
+public interface IEntity<TKey> : IEntity
+{
+    TKey Id { get; set; }
+}
+
+public abstract class BaseEntity<TKey> : IEntity<TKey>
+{
+    public virtual TKey Id { get; set; }
     private readonly List<BaseEvent> _domainEvents = new();
 
     [NotMapped]

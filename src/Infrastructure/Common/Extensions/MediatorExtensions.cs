@@ -6,10 +6,10 @@ namespace CleanArchitecture.Infrastructure.Common.Extensions;
 
 public static class MediatorExtensions
 {
-    public static async Task DispatchDomainEvents(this IMediator mediator, DbContext context)
+    public static async Task DispatchDomainEvents<Tkey>(this IMediator mediator, DbContext context)
     {
         var entities = context.ChangeTracker
-            .Entries<BaseEntity>()
+            .Entries<BaseEntity<Tkey>>()
             .Where(e => e.Entity.DomainEvents.Any())
             .Select(e => e.Entity);
 
